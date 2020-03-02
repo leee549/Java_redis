@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:aop="http://www.springframework.org/schema/aop"
+        xmlns:tx="http://www.springframework.org/schema/tx"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.springframework.org/schema/context
+      http://www.springframework.org/schema/context/spring-context.xsd
+      http://www.springframework.org/schema/aop
+      http://www.springframework.org/schema/aop/spring-aop.xsd
+      http://www.springframework.org/schema/tx
+      http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!--加载properties文件-->
+    <context:property-placeholder location="classpath:db.properties" system-properties-mode="NEVER"/>
+
+    <!--配置数据源和连接池-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <!--配置数据源四要素-->
+        <property name="driverClassName" value="${driverClass}"/>
+        <property name="url" value="${url}"/>
+        <property name="username" value="${username}"/>
+        <property name="password" value="${password}"/>
+    </bean>
+
+    <!--配置sqlSessionFactory-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--1: 配置连接池-->
+        <property name="dataSource" ref="dataSource"/>
+        <!--2: 管理mapper.xml文件-->
+        <property name="mapperLocations" value="classpath:mapper/*Mapper.xml"/>
+        <!--3: 配置别名-->
+        <property name="typeAliasesPackage" value="cn.lhx.entity"/>
+        <!--4: 配置个性化设置-->
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+    </bean>
+
+    <!--Mapper接口扫描器-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="cn.lhx.dao"/>
+        <!--<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>-->
+    </bean>
+
+    <!--组件扫描器-->
+    <context:component-scan base-package="cn.lhx"/>
+
+    <!-- 业务层的事务配置:3W -->
+    <!--What: 做什么增强(事务增强)-->
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <!--WHen: 在什么时候做事务增强(在发生增删改查操作的时候做增强)-->
+    <tx:advice id="txAdvice" transaction-manager="txManager">
+        <tx:attributes>
+            <!--读数据时不开启事务-->
+            <tx:method name="get*" read-only="true"/>
+            <tx:method name="list*" read-only="true"/>
+            <tx:method name="query*" read-only="true"/>
+            <!--其他操作都开启事务-->
+            <tx:method name="*"/>
+        </tx:attributes>
+    </tx:advice>
+    <!--Where: 在哪里做事务增强(在service层所有的增删改查操作中做增强)-->
+    <aop:config>
+        <aop:pointcut id="pointcut" expression="execution(* cn.lhx.service.impl.*ServiceImpl.*(..))"/>
+        <!--连接Where和When-->
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="pointcut"/>
+    </aop:config>
+    <!--导入redis相关配置文件-->
+    <import resource="classpath:applicationContext_redis.xml"/>
+    <!--导入shiro配置-->
+    <import resource="classpath:applicationContext_shiro.xml"/>
+
+</beans>

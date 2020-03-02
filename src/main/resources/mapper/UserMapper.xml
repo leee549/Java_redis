@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.lhx.dao.UserDao">
+
+    <cache type="cn.lhx.cache.MyCache"/>
+
+    <!--自定义映射-->
+    <resultMap id="BaseResultMap" type="cn.lhx.entity.User">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="password" column="password"/>
+        <result property="admin" column="admin"/>
+        <result property="date" column="date"/>
+        <result property="deptId" column="dept_id"/>
+        <!--员工部门表一对多映射-->
+        <!--<association property="dept" javaType="Department" >-->
+            <!--<id column="d_id" property="id"/>-->
+            <!--<result column="d_name" property="name"/>-->
+            <!--<result column="d_sn" property="sn"/>-->
+        <!--</association>-->
+        <!--员工角色表多多映射-->
+        <!--<collection property="roles" column="id"-->
+                    <!--select="cn.lhx.dao.RoleDao.selectByEmployeeId">-->
+
+        <!--</collection>-->
+
+    </resultMap>
+
+
+    <select id="selectAllUser" resultMap="BaseResultMap">
+        select * from user
+    </select>
+    <select id="queryByUserName" resultMap="BaseResultMap" resultType="User">
+        select * from user where name=#{name}
+    </select>
+
+    <insert id="insertUser" parameterType="User" >
+        insert into user(name,password,admin,dept_id,date)
+        values (#{name},#{password},#{admin},#{deptId},#{date})
+    </insert>
+    <update id="updateUser" parameterType="User">
+        update user set date=#{date} where id=#{id}
+    </update>
+
+</mapper>

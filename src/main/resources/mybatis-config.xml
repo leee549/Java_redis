@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <!--MyBatis的个性化配置-->
+    <settings>
+        <setting name="lazyLoadingEnabled" value="false"/>
+        <setting name="aggressiveLazyLoading" value="false"/>
+        <setting name="lazyLoadTriggerMethods" value="clone"/>
+
+        <!--驼峰命名-->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+
+    </settings>
+
+    <plugins>
+        <!-- com.github.pagehelper为PageHelper类所在包名 -->
+        <plugin interceptor="com.github.pagehelper.PageInterceptor">
+            <!--当pageNum<=0时，将pageNum设置为1-->
+            <!--当pageNum>pages时，将pageNum设置为pages-->
+            <property name="reasonable" value="true"/>
+        </plugin>
+    </plugins>
+
+</configuration>
