@@ -74,6 +74,6 @@ public class UserController {
     @RequestMapping("/logout")
     public String logout(){
         SecurityUtils.getSubject().logout();
-        return "index";
+        return "forward:/index.jsp";
     }
 }
