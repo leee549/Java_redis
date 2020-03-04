@@ -58,8 +58,8 @@
     <select id="querySnByEmployeeId" resultMap="BaseResultMap">
         select r.id, r.name,r.sn
         from role r
-                 left join employee_role er on r.id = er.role_id
-        where er.employee_id = #{id}
+                 left join user_role ur on r.id = ur.role_id
+        where ur.user_id = #{id}
 
     </select>
     <!-- 删除旧的角色-权限联系 -->

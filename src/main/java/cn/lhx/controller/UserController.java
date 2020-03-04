@@ -70,4 +70,10 @@ public class UserController {
         subject.login(token);
         return "redirect:/users";
     }
+
+    @RequestMapping("/logout")
+    public String logout(){
+        SecurityUtils.getSubject().logout();
+        return "index";
+    }
 }

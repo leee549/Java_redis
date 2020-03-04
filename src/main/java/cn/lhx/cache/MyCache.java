@@ -22,7 +22,7 @@ public class MyCache implements Cache {
      */
     private String id;
 
-    RedisTemplate<String, Object> template;
+    private RedisTemplate<String, Object> template;
 
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
 

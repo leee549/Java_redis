@@ -39,7 +39,13 @@
     <!-- 安全管理器 -->
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
         <property name="realm" ref="myRealm"/>
+        <property name="cacheManager" ref="CacheManager"/>
         <!--<property name="rememberMeManager" ref="rememberMeManager"/>-->
         <!--<property name="sessionManager" ref="sessionManager"/>-->
+    </bean>
+
+    <!--声名CacheManager-->
+    <bean id="CacheManager" class="cn.lhx.cache.MyShiroCacheManager">
+        <property name="template" ref="redisTemplate"/>
     </bean>
 </beans>
