@@ -28,11 +28,9 @@
         <property name="lifo" value="true"></property>
     </bean>
     <!-- 连接Factory -->
-    <bean  id="jedisConnectionFactory"
+    <bean id="jedisConnectionFactory"
            class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
         <!-- Redis主机  -->
-
-
         <property name="hostName" value="127.0.0.1"></property>
         <property name="port" value="6379"></property>
         <!-- 连接池配置信息  -->
@@ -42,7 +40,7 @@
     声明序列化组件
     -->
     <bean id="ss" class="org.springframework.data.redis.serializer.StringRedisSerializer"   />
-    <bean  class="org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer"
+    <bean class="org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer"
            id="jacks"  />
     <bean class="com.alibaba.fastjson.support.spring.GenericFastJsonRedisSerializer"  id="fast"></bean>
     <!-- RedisTemplate:核⼼组件  -->
@@ -53,4 +51,13 @@
           p:hashValueSerializer-ref="fast"
           p:stringSerializer-ref="ss"
           p:valueSerializer-ref="fast"/>
+            <!--此redisTemplate2  key采用string序列化
+               value 没有使用jackson 或者 fastjson序列化，而是采用默认的JDK序列化
+               因为simpleSession类中的属性都是transient 只能通过JDK序列化去回调writeobject和
+               readobject完成序列化和反序列化
+               -->
+    <bean id="redisTemplate2" class="org.springframework.data.redis.core.RedisTemplate"
+          p:connectionFactory-ref="jedisConnectionFactory"
+          p:keySerializer-ref="ss"
+         />
 </beans>

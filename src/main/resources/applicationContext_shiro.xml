@@ -40,12 +40,24 @@
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
         <property name="realm" ref="myRealm"/>
         <property name="cacheManager" ref="CacheManager"/>
+    <!-- 注册sessionManager 其中会调度sessionDao 将session 存入redis-->
+        <property name="sessionManager" ref="sessionManager"/>
         <!--<property name="rememberMeManager" ref="rememberMeManager"/>-->
-        <!--<property name="sessionManager" ref="sessionManager"/>-->
+
     </bean>
 
     <!--声名CacheManager-->
     <bean id="CacheManager" class="cn.lhx.cache.MyShiroCacheManager">
         <property name="template" ref="redisTemplate"/>
+    </bean>
+
+    <!-- 声名SessionManager-->
+    <bean id="sessionManager" class="org.apache.shiro.session.mgt.DefaultSessionManager">
+            <property name="sessionDAO">
+                <bean class="cn.lhx.session.MySessionDao">
+                    <property name="template" ref="redisTemplate2"/>
+                </bean>
+            </property>
+            <property name="globalSessionTimeout" value="1800000"/>
     </bean>
 </beans>
