@@ -20,7 +20,7 @@ public class ShiroController {
         System.out.println("通过验证已经正常登录！");
         return "forward:/WEB-INF/success.jsp";
     }
-
+    
     @RequiresUser
     @RequestMapping("/test2")
     public String test2(){

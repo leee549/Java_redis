@@ -9,6 +9,16 @@
     password:<input type="password" name="password"><br>
     <input type="submit" name="登录">
 </form>
+--------------------
+<br>
+<form method="post" action="${pageContext.request.contextPath}/upload/test2"
+        enctype="multipart/form-data">
+    <input type="text" name="username"><br>
+    <input type="file" name="file"><br>
+    <input type="submit" value="上传">
+
+
+</form>
 
 </body>
 </html>
